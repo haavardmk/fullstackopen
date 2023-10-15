@@ -6,7 +6,7 @@ sequenceDiagram
 
     Mr. notetaker->>browser: Writes: "Haluan sauna", clicks "Save"
     activate browser
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    browser->>server: 302 found (URL redirect) 
     activate server
     server-->>browser: HTML document
     deactivate server
