@@ -1,5 +1,6 @@
 ```mermaid
 sequenceDiagram
+    participant Mr. notetaker
     participant browser
     participant server
 
