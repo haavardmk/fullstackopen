@@ -6,7 +6,7 @@ sequenceDiagram
 
     Mr. notetaker->>browser: Writes: "Haluan sauna", clicks "Save"
     activate browser
-    browser->>server: 302 found (URL redirect) 
+    browser->>server: 302 found (URL redirect) causing reload
     activate server
     server-->>browser: HTML document
     deactivate server
@@ -21,7 +21,6 @@ sequenceDiagram
     server-->>browser: the JavaScript file
     deactivate server
 
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
