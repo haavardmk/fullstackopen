@@ -8,7 +8,6 @@ sequenceDiagram
     activate browser
     browser->>server: 302 found (URL redirect) causing reload
     activate server
-    Note Appends new note to data.json
     server-->>browser: HTML document
     deactivate server
 
