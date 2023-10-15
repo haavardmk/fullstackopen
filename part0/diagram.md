@@ -7,8 +7,8 @@ sequenceDiagram
     Mr. notetaker->>browser: Writes: "Haluan sauna", clicks "Save"
     activate browser
     browser->>server: 302 found (URL redirect) causing reload
-        Note Appends new note to data.json
     activate server
+Note Appends new note to data.json
     server-->>browser: HTML document
     deactivate server
 
