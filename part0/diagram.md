@@ -4,6 +4,7 @@ sequenceDiagram
     participant browser
     participant server
 
+    Mr. notetaker->>browser: Writes: "Haluan sauna", clicks "Save"
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
