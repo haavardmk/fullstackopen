@@ -1,8 +1,13 @@
 const express = require('express')
 const app = express()
-var morgan = require('morgan')
+const cors = require('cors')
+const morgan = require('morgan')
 
+app.use(cors())
 app.use(express.json())
+app.use(express.static('dist'))
+
+
 morgan.token('req-body', (req) => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body);
@@ -78,26 +83,51 @@ let persons = [
     response.json(person)
   })
 
-  app.put('/api/persons:id', (request, response) => {
-    const body = request.body
+  app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const user = persons.find(person => person.id === id)
+    if (persons.some(person => person.id === id)) {
+      persons = persons.filter(person => person.id !== id)
+      console.log('DELETE: ' + JSON.stringify(user.name, undefined, 2));
+      response.status(204).end()
+    }
+    else {
+      response.status(404).end()
+    }
+  })
+
+  app.put('/api/persons/:id', (request, response) => {
+    const body = request.body;
     console.log('PUT: ', body);
   
     if (!body.name) {
-      return response.status(400).json({ 
-        error: 'Person not found' 
-      })
+      return response.status(400).json({
+        error: 'Name is required',
+      });
     }
   
-    const updatePerson = {
+    const idToUpdate = Number(request.params.id);
+    const personToUpdate = persons.find((person) => person.id === idToUpdate);
+  
+    if (!personToUpdate) {
+      return response.status(404).json({
+        error: 'Person not found',
+      });
+    }
+  
+    const updatedPerson = {
+      ...personToUpdate,
       name: body.name,
-      number: body.number || false,
-      id: body.id,
-    }
-
-    persons = persons.map(person => person.id === updatePerson.id ? updatePerson : person) 
+      number: body.number || personToUpdate.number, // Keep the existing number if not provided in the request
+    };
   
-    response.json(persons)
-  })
+    persons = persons.map((person) =>
+      person.id === idToUpdate ? updatedPerson : person
+    );
+  
+    response.json(updatedPerson);
+  });
+  
 
   app.get('/', (request, response) => {
     console.log('GET HEADER');
@@ -132,9 +162,10 @@ let persons = [
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
+    const user = persons.find(person => person.id === id)
     if (persons.some(person => person.id === id)) {
       persons = persons.filter(person => person.id !== id)
-      console.log('DELETE: ' + JSON.stringify(person,undefined, 2));
+      console.log('DELETE: ' + JSON.stringify(user.name, undefined, 2));
       response.status(204).end()
     }
     else {

@@ -5,16 +5,6 @@ import './index.css'
 
 
 const Phonebook = ({ persons, onDelete}) => {
-
-  // const deleteUser = (event, id) => {
-  //   event.preventDefault();
-  //   console.log('Delete user with id:', id);
-  //   Server.remove(id);
-
-  // }
-
-  //<button onClick={(event) => deleteUser(event, person.id)}>{'Delete'}</button>
-
   const mapped_person = persons.map((person) => (
     <p key={person.name}>
       {person.name} {person.number} <button onClick={() => onDelete(person.id)}>Delete</button>
@@ -85,16 +75,6 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
 
-  // useEffect(() => {
-  //   console.log('effect')
-  //   axios
-  //     .get('http://localhost:3001/persons')
-  //     .then(response => {
-  //       console.log('promise fulfilled')
-  //       setPersons(response.data)
-  //     })
-  // }, [])
-
   useEffect(() => {
     console.log('effect')
     Server.getAll().then(data => {setPersons(data)})
@@ -147,7 +127,7 @@ const App = () => {
 
       if (persons.some((person) => person.name === newName)) {
         if (confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
-          if (personsOnServer.some((person) => person.name !== newName)){
+          if (!personsOnServer.some((person) => person.name === newName)){
             setError('Information of ' + newName + 'has already been removed from server')
             setTimeout(() => {setError(null)}, 5000)
           }
