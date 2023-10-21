@@ -166,11 +166,20 @@ const App = () => {
       setTimeout(() => {setMessage(null)}, 5000)
     })
     .catch(error => {
-      if (newPerson.name.length < 3) {
+      console.error('Error:', error);
+      if (error.response.data.error.includes('shorter')) {
         setError('Name: ' + newPerson.name + ' is too short, should be at least 3 characters long')
         setTimeout(() => {setError(null)}, 5000)
       }
-      console.log(error.response.data.error)
+      else if (error.response.data.error.includes('number')) {
+        setError('Number: ' + newPerson.number + ' not correctly formatted')
+        setTimeout(() => {setError(null)}, 5000)
+      }
+      else{
+        setError('Unknown error: ' + error.response.data.error)
+        setTimeout(() => {setError(null)}, 5000)
+      } 
+      console.log(error.response.data.error)  
     })
     }
 
