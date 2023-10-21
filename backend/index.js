@@ -49,7 +49,7 @@ const unknownEndpoint = (request, response) => {
 // );
 
 
-//app.use(express.static('dist'))
+app.use(express.static('dist'))
 app.use(cors())
 app.use(express.json())
 app.use(requestLogger)
@@ -83,6 +83,12 @@ app.use(express.static('build'))
     console.log('Generated ID: ', id);
     return id  
   }
+
+  app.get('/', (request, response) => {
+    console.log('GET HEADER');
+    response.send('<h1>Hello World!</h1>')
+  })
+
 
   app.get('/info', (request, response) => {
     console.log('GET HEADER');
