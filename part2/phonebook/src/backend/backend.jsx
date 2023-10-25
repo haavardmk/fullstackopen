@@ -23,6 +23,7 @@ const getAllAsync = async () => {
     const response = await axios.get(baseUrl);
     return response.data;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -52,7 +53,7 @@ const update = (id, newObject) => {
 
 const remove = (id) => {
   return axios.delete(`${baseUrl}/${id}`)
-    .then(response => {
+    .then(() => {
       console.log(`Deleted post with ID ${id}`);
       return 0; // Successful deletion
     })

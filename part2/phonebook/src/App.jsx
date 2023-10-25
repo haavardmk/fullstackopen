@@ -1,66 +1,87 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import Server from './backend/backend';
-import './index.css'
+import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import Server from "./backend/backend";
+import "./index.css";
 
-
-const Phonebook = ({ persons, onDelete}) => {
+const Phonebook = ({ persons, onDelete }) => {
   const mapped_person = persons.map((person) => (
     <p key={person.name}>
-      {person.name} {person.number} <button onClick={() => onDelete(person.id)}>Delete</button>
+      {person.name} {person.number}{" "}
+      <button onClick={() => onDelete(person.id)}>Delete</button>
     </p>
   ));
 
   return mapped_person;
 };
 
-const SearchForm = ({handleFilterChange, newFilter}) => {
+Phonebook.propTypes = {
+  persons: PropTypes.object.isRequired,
+  onDelete: PropTypes.function.isRequired,
+};
+
+const SearchForm = ({ handleFilterChange, newFilter }) => {
   return (
     <form onChange={handleFilterChange}>
-    <div>
-      name: <input value={newFilter} onChange={handleFilterChange} />
-    </div>
-  </form>
-  )
-}
+      <div>
+        name: <input value={newFilter} onChange={handleFilterChange} />
+      </div>
+    </form>
+  );
+};
 
-const NameAndNumberForm = ({handleNameChange, handleNumberChange, addNameAndNumber, newName, newNumber}) => {
+SearchForm.propTypes = {
+  handleFilterChange: PropTypes.func.isRequired,
+  newFilter: PropTypes.string.isRequired,
+};
+
+NameAndNumberForm.propTypes = {
+  handleNameChange: PropTypes.func.isRequired,
+  handleNumberChange: PropTypes.func.isRequired,
+  addNameAndNumber: PropTypes.func.isRequired,
+  newName: PropTypes.string.isRequired,
+  newNumber: PropTypes.string.isRequired,
+};
+
+const NameAndNumberForm = ({
+  handleNameChange,
+  handleNumberChange,
+  addNameAndNumber,
+  newName,
+  newNumber,
+}) => {
   return (
-  <form onSubmit={addNameAndNumber}>
-          <div>
-            name: <input value={newName} onChange={handleNameChange} />
-          </div>
-          <div>
-            number: <input value={newNumber} onChange={handleNumberChange} />
-          </div>
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </form>
-  )
-}
+    <form onSubmit={addNameAndNumber}>
+      <div>
+        name: <input value={newName} onChange={handleNameChange} />
+      </div>
+      <div>
+        number: <input value={newNumber} onChange={handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
 
 const Notification = ({ message, error }) => {
   if (message && error === null) {
-    return null
+    return null;
   }
 
   if (message !== null) {
-  return (
-    <div className='message'>
-      {message}
-    </div>
-  )
+    return <div className="message">{message}</div>;
   }
 
   if (error !== null) {
-    return (
-      <div className='error'>
-        {error}
-      </div>
-    )
-    }
-}
+    return <div className="error">{error}</div>;
+  }
+};
+
+Notification.propTypes = {
+  message: PropTypes.string.isRequired,
+  error: PropTypes.string.isRequired,
+};
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -72,42 +93,52 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
-  const [message, setMessage] = useState(null)
-  const [error, setError] = useState(null)
-  const [updateApp, setUpdateApp] = useState(0)
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+  const [updateApp, setUpdateApp] = useState(0);
 
   useEffect(() => {
-    console.log('effect')
-    Server.getAll().then(data => {setPersons(data)})
-  }, [updateApp])
-
+    console.log("effect");
+    Server.getAll().then((data) => {
+      setPersons(data);
+    });
+  }, [updateApp]);
 
   const deletePerson = (id) => {
-    let name = persons.find(person => person.id === id)
-    if (confirm('Are you sure you want to delete ' + name.name + '?')) {
-      const updatedPersons = persons.filter((person) => person.id !== id);
-      console.log('Removing', id, name.name);
+    let name = persons.find((person) => person.id === id);
+    if (confirm("Are you sure you want to delete " + name.name + "?")) {
+      console.log("Removing", id, name.name);
 
       Server.remove(id)
-      .then(result => {
-        if (result === 0) {
-          console.log('Deletion successful');
-          setUpdateApp(updateApp+1);
-        } else {
-          setError('Information of ' + name.name + ' has already been removed from server')
-          setTimeout(() => {setError(null)}, 5000)
-          console.error('Deletion failed');
-
-        }
-      })
-      .catch(error => {
-        setError('Information of ' + name.name + ' has already been removed from server')
-        setTimeout(() => {setError(null)}, 5000)
-        console.error('Deletion error', error);
-      });
+        .then((result) => {
+          if (result === 0) {
+            console.log("Deletion successful");
+            setUpdateApp(updateApp + 1);
+          } else {
+            setError(
+              "Information of " +
+                name.name +
+                " has already been removed from server"
+            );
+            setTimeout(() => {
+              setError(null);
+            }, 5000);
+            console.error("Deletion failed");
+          }
+        })
+        .catch((error) => {
+          setError(
+            "Information of " +
+              name.name +
+              " has already been removed from server"
+          );
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
+          console.error("Deletion error", error);
+        });
     }
   };
-  
 
   const handleNameChange = (event) => {
     console.log(event.target.value);
@@ -123,87 +154,125 @@ const App = () => {
     event.preventDefault();
 
     Server.getAll()
-      .then(personsOnServer => {
-      console.log('Server:', personsOnServer);
+      .then((personsOnServer) => {
+        console.log("Server:", personsOnServer);
 
-      if (persons.some((person) => person.name === newName)) {
-        if (confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
-          if (!personsOnServer.some((person) => person.name === newName)){
-            setError('Information of ' + newName + 'has already been removed from server')
-            setTimeout(() => {setError(null)}, 5000)
+        if (persons.some((person) => person.name === newName)) {
+          if (
+            confirm(
+              `${newName} is already added to phonebook, replace the old number with new one?`
+            )
+          ) {
+            if (!personsOnServer.some((person) => person.name === newName)) {
+              setError(
+                "Information of " +
+                  newName +
+                  "has already been removed from server"
+              );
+              setTimeout(() => {
+                setError(null);
+              }, 5000);
+            }
+
+            let updatePerson = persons.find(
+              (person) => person.name === newName
+            );
+            updatePerson.number = newNumber;
+            Server.update(updatePerson.id, {
+              name: updatePerson.name,
+              number: updatePerson.number,
+              id: updatePerson.id,
+            });
+            //const updatePersons = persons.map((person) => person.id === updatePerson.id ? updatePerson : person)
+            setMessage("Changed " + newName + "s number");
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            setUpdateApp(updateApp + 1);
           }
-  
-          let updatePerson = persons.find(person => person.name === newName)
-          updatePerson.number = newNumber
-          Server.update(updatePerson.id, {name: updatePerson.name, number: updatePerson.number, id: updatePerson.id})
-          //const updatePersons = persons.map((person) => person.id === updatePerson.id ? updatePerson : person)
-          setMessage('Changed ' + newName + 's number')
-          setTimeout(() => {setMessage(null)}, 5000)
-          setUpdateApp(updateApp+1);
+        } else {
+          addToServer({
+            name: newName,
+            number: newNumber,
+            id: persons.length + 1,
+          });
         }
-      }
-      else {
-        addToServer({ name: newName, number: newNumber, id: persons.length + 1 })
-      }
-      setNewName("");
-      setNewNumber("")
-      setUpdateApp(updateApp+1);
-
+        setNewName("");
+        setNewNumber("");
+        setUpdateApp(updateApp + 1);
       })
-      .catch(error => {
-        console.error('Error:', error);
+      .catch((error) => {
+        console.error("Error:", error);
       });
-
-
-
   };
 
   const addToServer = (newPerson) => {
     Server.create(newPerson)
-    .then(p => {
-      setUpdateApp(updateApp+1);
-      setMessage('Added ' + newName + ' to phonebook')
-      setTimeout(() => {setMessage(null)}, 5000)
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      if (error.response.data.error.includes('shorter')) {
-        setError('Name: ' + newPerson.name + ' is too short, should be at least 3 characters long')
-        setTimeout(() => {setError(null)}, 5000)
-      }
-      else if (error.response.data.error.includes('number')) {
-        setError('Number: ' + newPerson.number + ' not correctly formatted')
-        setTimeout(() => {setError(null)}, 5000)
-      }
-      else{
-        setError('Unknown error: ' + error.response.data.error)
-        setTimeout(() => {setError(null)}, 5000)
-      } 
-      console.log(error.response.data.error)  
-    })
-    }
+      .then(() => {
+        setUpdateApp(updateApp + 1);
+        setMessage("Added " + newName + " to phonebook");
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (error.response.data.error.includes("shorter")) {
+          setError(
+            "Name: " +
+              newPerson.name +
+              " is too short, should be at least 3 characters long"
+          );
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
+        } else if (error.response.data.error.includes("number")) {
+          setError("Number: " + newPerson.number + " not correctly formatted");
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
+        } else {
+          setError("Unknown error: " + error.response.data.error);
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
+        }
+        console.log(error.response.data.error);
+      });
+  };
 
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value);
   };
 
-  const searchFilter = (persons) => persons.filter((person) =>
-    person.name.toLowerCase().includes(newFilter.toLowerCase())
-  );
-
+  const searchFilter = (persons) =>
+    persons.filter((person) =>
+      person.name.toLowerCase().includes(newFilter.toLowerCase())
+    );
 
   //console.log(persons);
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} error={error} />
-      <SearchForm handleFilterChange={handleFilterChange} newFilter={newFilter}/>
+      <SearchForm
+        handleFilterChange={handleFilterChange}
+        newFilter={newFilter}
+      />
       <h3>Add new: </h3>
-      <NameAndNumberForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} addNameAndNumber={addNameAndNumber} newName={newName} newNumber={newNumber}/>
+      <NameAndNumberForm
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addNameAndNumber={addNameAndNumber}
+        newName={newName}
+        newNumber={newNumber}
+      />
       <h2>Numbers</h2>
       <Phonebook persons={searchFilter(persons)} onDelete={deletePerson} />
     </div>
   );
 };
+
+
 
 export default App;
