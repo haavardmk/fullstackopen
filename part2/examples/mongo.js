@@ -1,13 +1,12 @@
 const mongoose = require('mongoose')
 
 
-// if (process.argv.length<3) {
-//   console.log('give password as argument')
-//   process.exit(1)
-// }
+if (process.argv.length<3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
 
-// const password = process.argv[2]
-const password = 'ae9cab'
+const password = process.argv[2]
 
 // const url =
 //   `mongodb+srv://xept:${password}@fsodb.3hekfuf.mongodb.net/?retryWrites=true&w=majority`

@@ -15,8 +15,8 @@ const Phonebook = ({ persons, onDelete }) => {
 };
 
 Phonebook.propTypes = {
-  persons: PropTypes.object.isRequired,
-  onDelete: PropTypes.function.isRequired,
+  persons: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 const SearchForm = ({ handleFilterChange, newFilter }) => {
@@ -32,14 +32,6 @@ const SearchForm = ({ handleFilterChange, newFilter }) => {
 SearchForm.propTypes = {
   handleFilterChange: PropTypes.func.isRequired,
   newFilter: PropTypes.string.isRequired,
-};
-
-NameAndNumberForm.propTypes = {
-  handleNameChange: PropTypes.func.isRequired,
-  handleNumberChange: PropTypes.func.isRequired,
-  addNameAndNumber: PropTypes.func.isRequired,
-  newName: PropTypes.string.isRequired,
-  newNumber: PropTypes.string.isRequired,
 };
 
 const NameAndNumberForm = ({
@@ -64,6 +56,14 @@ const NameAndNumberForm = ({
   );
 };
 
+NameAndNumberForm.propTypes = {
+  handleNameChange: PropTypes.func.isRequired,
+  handleNumberChange: PropTypes.func.isRequired,
+  addNameAndNumber: PropTypes.func.isRequired,
+  newName: PropTypes.string.isRequired,
+  newNumber: PropTypes.string.isRequired,
+};
+
 const Notification = ({ message, error }) => {
   if (message && error === null) {
     return null;
@@ -78,9 +78,15 @@ const Notification = ({ message, error }) => {
   }
 };
 
+Notification.defaultProps = {
+  message: '',
+  error: '',
+};
+
+
 Notification.propTypes = {
-  message: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  error: PropTypes.string
 };
 
 const App = () => {
