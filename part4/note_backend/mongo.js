@@ -7,10 +7,14 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-const url = `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/?retryWrites=true&w=majority`
+console.log('password', password)
 
+// const url =
+//    `mongodb+srv://xept:${password}@fsodb.3hekfuf.mongodb.net/noteApp?retryWrites=true&w=majority`
+const url_test =
+   `mongodb+srv://xept:${password}@fsodb.3hekfuf.mongodb.net/testNoteApp?retryWrites=true&w=majority`
 mongoose.set('strictQuery', false)
-mongoose.connect(url)
+mongoose.connect(url_test)
 
 const noteSchema = new mongoose.Schema({
   content: String,
@@ -21,7 +25,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema)
 
 const note = new Note({
-  content: 'Mongoose makes things easy',
+  content: 'Test Database entry 2',
   date: new Date(),
   important: true,
 })
