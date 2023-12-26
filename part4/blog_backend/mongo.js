@@ -34,8 +34,8 @@ blog.save().then(() => {
 
 
 Blog.find({}).then((result) => {
-  result.forEach((note) => {
-    console.log(note)
+  result.forEach((blog) => {
+    console.log(blog)
   })
   mongoose.connection.close()
 })
