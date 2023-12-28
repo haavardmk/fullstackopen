@@ -154,12 +154,13 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p>
           <button
+            id='Logout'
             onClick={() => {
               setUser(null)
               window.localStorage.removeItem('loggedBlogappUser')
             }}
           >
-            logout
+            Log out
           </button>
           {blogForm()}
         </div>

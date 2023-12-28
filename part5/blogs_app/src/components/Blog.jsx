@@ -29,18 +29,17 @@ const Blog = ({ blog, user, addLike, removeBlog }) => {
     <div style={blogStyle}>
       <li className='blog'>
         <h2>
-          {blog.title}
+          {blog.title} by {blog.author}
           <button onClick={toggleView}>{view ? 'Hide' : 'View'}</button>
         </h2>
         {view && (
           <>
-            <h3>{blog.author}</h3>
             <p>{blog.url}</p>
             <div>Likes: {blog.likes}</div>
-            <button onClick={addLike}>Like</button>
+            <button id='Like' onClick={addLike}>Like</button>
             {userIsAuthor() && (
               <>
-                <button onClick={removeBlog}>Delete</button>
+                <button id='Delete' onClick={removeBlog}>Delete</button>
               </>
             )}
           </>
