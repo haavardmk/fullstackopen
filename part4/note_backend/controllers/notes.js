@@ -4,7 +4,7 @@ const User = require('../models/user')
 
 const jwt = require('jsonwebtoken')
 
-const getTokenFrom = request => {
+const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
@@ -13,8 +13,7 @@ const getTokenFrom = request => {
 }
 
 notesRouter.get('/', async (request, response) => {
-  const notes = await Note
-    .find({}).populate('user', { username: 1, name: 1 })
+  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
 
   response.json(notes)
 })
@@ -32,7 +31,7 @@ notesRouter.post('/', async (request, response) => {
   const note = new Note({
     content: body.content,
     important: body.important === undefined ? false : body.important,
-    user: user.id
+    user: user.id,
   })
 
   const savedNote = await note.save()
@@ -65,10 +64,10 @@ notesRouter.put('/:id', (request, response, next) => {
   }
 
   Note.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedNote => {
+    .then((updatedNote) => {
       response.json(updatedNote)
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
 
 module.exports = notesRouter
